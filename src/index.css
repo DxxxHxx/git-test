@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base{
+    #root{
+        @apply border-2 w-4/5 m-auto p-3
+    }
+}
