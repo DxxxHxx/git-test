@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { login } from "./api";
-import axios from "axios";
+import { Outlet, useNavigate } from "react-router-dom";
 
 export interface IInfo {
   id: number;
@@ -18,6 +18,7 @@ export default function App() {
   const [id, setId] = useState("kminchelle");
   const [pw, setPw] = useState("0lelplR");
   const [token, settoken] = useState("");
+  const navigate = useNavigate();
 
   const handleChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {
     setId(e.currentTarget.value);
@@ -35,15 +36,6 @@ export default function App() {
     onError: (e) => console.log(e.message),
   });
 
-  const handleGetUser = () => {
-    axios
-      .get(`https://dummyjson.com/auth/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => console.log(res.data));
-  };
   useEffect(() => {
     console.log(token);
   }, [token]);
@@ -53,6 +45,7 @@ export default function App() {
         onSubmit={(e) => {
           e.preventDefault();
           mutate({ username: id, password: pw });
+          navigate("get-user-info");
         }}
       >
         <Input text="ID" onChange={handleChangeId} value={id} />
@@ -61,12 +54,8 @@ export default function App() {
           Log in
         </button>
       </form>
-      <button
-        onClick={handleGetUser}
-        className="mt-3 rounded-lg btn btn-active btn-primary"
-      >
-        Get user
-      </button>
+
+      <Outlet context={token} />
     </>
   );
 }
